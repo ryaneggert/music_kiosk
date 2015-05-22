@@ -1,0 +1,9 @@
+/*
+  These are the styles meant to apply to all of the pages
+*/
+
+[ng\:cloak],
+[ng-cloak],
+.ng-cloak {
+  display: none !important;
+}
