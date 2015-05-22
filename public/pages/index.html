@@ -10,27 +10,31 @@
   <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.0/angular-material.min.css">
   <!-- <link href="/css/style.css" rel="stylesheet"> -->
   <meta name="viewport" content="initial-scale=1" />
+  <!-- Base Location -->
+  <base href="/">
   <!-- Apple Web App Styling -->
   <link rel="apple-touch-icon" href="touch-icon-iphone.png">
   <link rel="apple-touch-icon" sizes="76x76" href="touch-icon-ipad.png">
   <link rel="apple-touch-icon" sizes="120x120" href="touch-icon-iphone-retina.png">
   <link rel="apple-touch-icon" sizes="152x152" href="touch-icon-ipad-retina.png">
+  <link rel="apple-touch-startup-image" href="/startup.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
 </head>
 
 <body layout="row">
   <div flex layout="column">
-    <div ng-controller="toolbarcontroller">
+    <div ng-controller="toolbarController">
       <md-content>
         <md-toolbar>
           <div class="md-toolbar-tools">
-            <md-button class="md-icon-button" aria-label="Settings">
+            <md-button class="md-icon-button" aria-label="Back" ng-if="show_back" ng-click="goBack()">
               <md-icon md-svg-icon="img/icons/ic_arrow_back_48px.svg"></md-icon>
             </md-button>
             <h2>
           <span>Olin College Music Program</span>
         </h2>
             <span flex></span>
-            <md-button class="md-icon-button" aria-label="Search">
+            <md-button class="md-icon-button" aria-label="Search" ng-if="show_search">
               <md-icon md-svg-icon="img/icons/ic_search_48px.svg"></md-icon>
             </md-button>
           </div>

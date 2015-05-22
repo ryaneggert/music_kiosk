@@ -53,35 +53,32 @@ kiosk.config(function($httpProvider) {
   $httpProvider.interceptors.push('AuthInterceptor');
 });
 
-kiosk.config(function($routeProvider) {
+kiosk.config(function($routeProvider, $locationProvider) {
   $routeProvider
-    .when('/', {
+    .when('/welcome', {
+      templateUrl: '../pages/splash.html',
+      controller: 'splashController'
+    })
+    .when('/home', {
       templateUrl: '../pages/home.html',
       controller: 'homeController'
+    })
+    .when('/watch/:id', {
+      templateUrl: '../pages/video.html',
+      controller: 'videoController'
+    })
+    .otherwise({
+      redirectTo: '/welcome'
     });
+
+  // use the HTML5 History API
+  $locationProvider.html5Mode({
+    enabled: true,
+    requireBase: true
+  });
 });
 
-kiosk.controller('sidenavcontroller', function($scope, $http, $location, $timeout, $mdSidenav, $mdUtil, $log) {
-  $scope.toggleLeft = buildToggler('left');
-  $scope.toggleRight = buildToggler('right');
-  /**
-   * Build handler to open/close a SideNav; when animation finishes
-   * report completion in console
-   */
-  function buildToggler(navID) {
-    console.log('CLICK ', navID)
-    var debounceFn = $mdUtil.debounce(function() {
-      $mdSidenav(navID)
-        .toggle()
-        .then(function() {
-          $log.debug("toggle " + navID + " is done");
-        });
-    }, 300);
-    return debounceFn;
-  }
-});
-
-kiosk.controller('homeController', function($scope, $http, $location, $timeout, $mdSidenav, $mdUtil, $log) {
+kiosk.controller('homeController', function($scope, $http, $location) {
   // $http.get('/api/home')
   //   .success(function(data) {
   //     console.log(data);
@@ -95,23 +92,27 @@ kiosk.controller('homeController', function($scope, $http, $location, $timeout, 
 
 });
 
-kiosk.controller('toolbarcontroller', function($scope) {
-  });
+kiosk.controller('splashController', function($scope, $http, $location) {
 
-kiosk.controller('LeftCtrl', function($scope, $timeout, $mdSidenav, $log) {
-  $scope.close = function() {
-    $mdSidenav('left').close()
-      .then(function() {
-        $log.debug("close LEFT is done");
-      });
-  };
 });
 
-kiosk.controller('RightCtrl', function($scope, $timeout, $mdSidenav, $log) {
-  $scope.close = function() {
-    $mdSidenav('right').close()
-      .then(function() {
-        $log.debug("close RIGHT is done");
-      });
+kiosk.controller('videoController', function($scope, $http, $location) {
+
+});
+
+kiosk.controller('toolbarController', function($scope, $location, $window) {
+  $scope.show_search = false;
+  $scope.show_back = true;
+  $scope.$on('$locationChangeStart', function(event) {
+    console.log($location.path());
+    if ($location.path() == "/home") {
+      $scope.show_search = true;
+    }
+    if ($location.path() == "/welcome") {
+      $scope.show_back = false;
+    }
+  });
+  $scope.goBack = function(event) {
+    $window.history.back();
   };
 });
