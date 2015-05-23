@@ -1,4 +1,4 @@
-var kiosk = angular.module('kiosk', ['ngRoute', 'ngTouch', 'ngMaterial', 'ngMessages'])
+var kiosk = angular.module('kiosk', ['ngRoute', 'ngTouch', 'ngMaterial', 'ngMessages', 'truncate'])
   .factory('focus', function($timeout) {
     return function(id) {
       // timeout makes sure that it is invoked after any other event has been triggered.
@@ -25,14 +25,14 @@ var kiosk = angular.module('kiosk', ['ngRoute', 'ngTouch', 'ngMaterial', 'ngMess
   })
   .config(function($mdThemingProvider) {
     $mdThemingProvider.theme('default')
-      .primaryPalette('purple', {
-        'default': '800',
+      .primaryPalette('blue', {
+        'default': '700',
       })
-      .accentPalette('green', {
-        'default': '800',
+      .accentPalette('orange', {
+        'default': '300',
       })
       .warnPalette('red', {
-        'default': '600'
+        'default': '500'
       });
   });
 
@@ -93,7 +93,27 @@ kiosk.controller('homeController', function($scope, $http, $location) {
 });
 
 kiosk.controller('splashController', function($scope, $http, $location) {
-
+  $scope.explore = function(event) {
+    event.preventDefault();
+    // Tell server to update video database
+    $http.post('/videos', {
+        action: 'fetch'
+      })
+      .success(function(update) {
+        if (update.failed) {
+          if (update.info === 'No playlists') {
+            console.error('ERROR: Did not find any YouTube playlists.');
+          } else {
+            console.error('ERROR: Could not update video database');
+          }
+        }
+        $location.path('/home');
+      })
+      .error(function(data) {
+        console.log('ERROR: Could not communicate with server to update video database');
+        $location.path('/home');
+      });
+  };
 });
 
 kiosk.controller('videoController', function($scope, $http, $location) {
@@ -103,13 +123,16 @@ kiosk.controller('videoController', function($scope, $http, $location) {
 kiosk.controller('toolbarController', function($scope, $location, $window) {
   $scope.show_search = false;
   $scope.show_back = true;
-  $scope.$on('$locationChangeStart', function(event) {
-    console.log($location.path());
+  $scope.$on('$locationChangeStart', function(event, next, current) {
     if ($location.path() == "/home") {
       $scope.show_search = true;
+    } else {
+      $scope.show_search = false;
     }
     if ($location.path() == "/welcome") {
       $scope.show_back = false;
+    } else {
+      $scope.show_back = true;
     }
   });
   $scope.goBack = function(event) {
