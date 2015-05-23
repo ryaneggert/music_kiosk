@@ -16,7 +16,8 @@
     "passport": "^0.2.1",
     "passport-facebook": "^1.0.3",
     "request": "^2.55.0",
-    "supergoose": "^0.2.3"
+    "supergoose": "^0.2.3",
+    "youtube-api": "^0.3.2"
   },
   "devDependencies": {},
   "scripts": {

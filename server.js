@@ -1,5 +1,7 @@
 var auths = require("./routes/auths");
 var main = require("./routes/index");
+var api = require("./routes/api");
+
 var express = require("express");
 var session = require("express-session");
 var path = require("path");
@@ -30,11 +32,15 @@ app.use(session({
 
 app.use('/auth', auths);
 
+app.get('/dev/makedb', api.makedb);
+
+app.post('/videos', api.videos);
+
 // app.get('/api/home', auths.isAuth_api, home.home);
 
 app.get('/*', main.main);
 
-mongoose.connect(process.env.MONGOURI || 'mongodb://localhost/bingo');
+mongoose.connect(process.env.MONGOURI || 'mongodb://localhost/ompk');
 var PORT = 3000;
 
 app = app.listen(process.env.PORT || PORT);

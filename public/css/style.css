@@ -2,8 +2,49 @@
   These are the styles meant to apply to all of the pages
 */
 
+body {
+  overflow: hidden;
+}
+
+md-card {
+  background-color: #fff;
+  height: 100%;
+}
+
+md-card h2:first-of-type {
+  margin-top: 0;
+}
+
+md-content.md-default-theme {
+  background-color: #eee;
+}
+
+md-content.splash {
+  overflow: hidden;
+}
+
+.md-display-3 {
+  color: rgb(30, 30, 30);
+}
+/*div.welcomebutton {
+  width: 60%;
+  margin: auto;
+}
+*/
+
+button.welcome {
+  width: 60%;
+  margin: auto;
+  font-size: 40px;
+  height: 60px;
+}
+
 [ng\:cloak],
 [ng-cloak],
 .ng-cloak {
   display: none !important;
+}
+
+md-card {
+  background-color: white;
 }
