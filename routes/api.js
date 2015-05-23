@@ -4,7 +4,6 @@ var path = require('path');
 var models = require('../models/models');
 var Playlist = models.playlist;
 var YouTube = require("youtube-api");
-console.log(process.env.KIOSK_GOOGLEAPI)
 YouTube.authenticate({
   type: "key",
   key: process.env.KIOSK_GOOGLEAPI
@@ -31,30 +30,9 @@ var parseresults = function(playlistres) {
   return newVideos;
 };
 
-var getplaylistItems = function(id, errs, page, callback) {
-  YouTube.playlistItems.list({
-    part: "id,snippet",
-    playlistId: id,
-    maxResults: 3,
-    pageToken: page,
-  }, function(api_err, newplaylistdata) {
-    var nextpage = null;
-    if (api_err) {
-      errs.push({
-        'error': 'api_error',
-        'info': api_err
-      });
-    } else {
-      nextpage = newplaylistdata.nextPageToken;
-    }
-    callback(nextpage, errs, newplaylistdata);
-  });
-};
-
-
-
-
 api.videos = function(req, res) {
+  // Function definitions //
+
   var updatedbplaylist = function(playlistId, videoArray) {
     Playlist
       .findOneAndUpdate({
@@ -99,6 +77,9 @@ api.videos = function(req, res) {
       }
     });
   };
+
+  // Process //
+
   var errs = [];
   // Get playlists from database
   Playlist
