@@ -34,11 +34,13 @@
           <span class="md-headline">Olin College Music Program</span>
         </h2>
             <span flex></span>
-            <md-input-container>
-              <label>Search</label>
-              <input type="text" ng-model="searchInput" ng-change="updateSearch()">
+            <md-input-container class="search" md-no-float layout="row" ng-show="show_searchBar">
+              <input flex-order="1" type="text" class="search" placeholder="Search..." ng-model="searchInput" ng-change="updateSearch()">
+              <md-button flex-order="2" class="md-icon-button clearsearch" aria-label="Clear Search" ng-class="{unclickable:searchInput.length < 1}" ng-click="clearSearch()">
+                <md-icon class="clearsearch" md-svg-icon="img/icons/ic_cancel_48px.svg" ng-class="{invisible:!searchInput || searchInput.length < 1}"></md-icon>
+              </md-button>
             </md-input-container>
-            <md-button class="md-icon-button" aria-label="Search" ng-if="show_search">
+            <md-button class="md-icon-button" aria-label="Search" ng-if="show_search" ng-click="toggleSearchBar()">
               <md-icon md-svg-icon="img/icons/ic_search_48px.svg"></md-icon>
             </md-button>
           </div>

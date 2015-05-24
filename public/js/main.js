@@ -140,6 +140,7 @@ kiosk.controller('videoController', function($scope, $http, $location) {
 
 kiosk.controller('toolbarController', function($scope, $location, $window, Search) {
   $scope.show_search = false;
+  $scope.show_searchBar = false;
   $scope.show_back = true;
   $scope.$on('$locationChangeStart', function(event, next, current) {
     if ($location.path() == "/home") {
@@ -155,6 +156,14 @@ kiosk.controller('toolbarController', function($scope, $location, $window, Searc
   });
   $scope.goBack = function(event) {
     $window.history.back();
+  };
+  $scope.clearSearch = function() {
+    $scope.searchInput = undefined;
+    Search.update($scope.searchInput);
+  };
+  $scope.toggleSearchBar = function() {
+    $scope.clearSearch();
+    $scope.show_searchBar = !$scope.show_searchBar;
   };
   $scope.updateSearch = function() {
     Search.update($scope.searchInput);
