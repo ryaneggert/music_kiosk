@@ -23,6 +23,16 @@ var kiosk = angular.module('kiosk', ['ngRoute', 'ngTouch', 'ngMaterial', 'ngMess
       return response;
     };
   })
+  .service('Search', function($rootScope) {
+    var searchService = {};
+    searchService.text = undefined;
+
+    searchService.update = function(newinput) {
+      searchService.text = newinput;
+      $rootScope.$broadcast('searchUpdate');
+    };
+    return searchService;
+  })
   .config(function($mdThemingProvider) {
     $mdThemingProvider.theme('default')
       .primaryPalette('blue', {
@@ -78,7 +88,7 @@ kiosk.config(function($routeProvider, $locationProvider) {
   });
 });
 
-kiosk.controller('homeController', function($scope, $http, $location) {
+kiosk.controller('homeController', function($scope, $http, $location, Search) {
   $http.get('/videos')
     .success(function(playlists) {
       $scope.playlists = playlists;
@@ -88,12 +98,16 @@ kiosk.controller('homeController', function($scope, $http, $location) {
       var videosArr = playlists.map(function(plt) {
         return plt.videos;
       });
-      $scope.videos = [].concat.apply([],videosArr);
+      $scope.videos = [].concat.apply([], videosArr);
 
     })
     .error(function(data) {
       console.log("Error: " + data);
     });
+  $scope.$on('searchUpdate', function() {
+    $scope.searchText = Search.text;
+  });
+
 });
 
 kiosk.controller('splashController', function($scope, $http, $location) {
@@ -124,7 +138,7 @@ kiosk.controller('videoController', function($scope, $http, $location) {
 
 });
 
-kiosk.controller('toolbarController', function($scope, $location, $window) {
+kiosk.controller('toolbarController', function($scope, $location, $window, Search) {
   $scope.show_search = false;
   $scope.show_back = true;
   $scope.$on('$locationChangeStart', function(event, next, current) {
@@ -141,5 +155,8 @@ kiosk.controller('toolbarController', function($scope, $location, $window) {
   });
   $scope.goBack = function(event) {
     $window.history.back();
+  };
+  $scope.updateSearch = function() {
+    Search.update($scope.searchInput);
   };
 });
