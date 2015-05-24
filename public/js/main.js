@@ -162,8 +162,9 @@ kiosk.controller('toolbarController', function($scope, $location, $window, Searc
     Search.update($scope.searchInput);
   };
   $scope.toggleSearchBar = function() {
-    $scope.clearSearch();
+    if (!$scope.show_searchBar) {
     $scope.show_searchBar = !$scope.show_searchBar;
+  } // Else this just hides iOS keyboard on click by removing focus from input.
   };
   $scope.updateSearch = function() {
     Search.update($scope.searchInput);
