@@ -1,0 +1,22 @@
+<md-content flex layout-padding layout-fill layout="column">
+  <md-card>
+    <md-card-content layout="column">
+      <h1 class="md-title">Filters</h1>
+      <div layout="row" layout-margin>
+        <md-button ng-repeat="category in categories" class="md-raised" ng-click="">{{category}}</md-button>
+      </div>
+    </md-card-content>
+  </md-card>
+  <md-card flex>
+    <md-card-content class="videobrowsecontent">
+      <md-grid-list md-cols="4" md-row-height="16:9" md-gutter="12px">
+        <md-grid-tile class="md-whiteframe-z2" md-rowspan="1" md-colspan="1" md-colspan-sm="1" ng-repeat="video in videos">
+          <img src="{{video.thumbnail.url}}" height="{{video.thumbnail.height}}" width="{{video.thumbnail.width}}">
+          <md-grid-tile-footer>
+            <h3>{{video.name | characters:55}}</h3>
+          </md-grid-tile-footer>
+        </md-grid-tile>
+      </md-grid-list>
+    </md-card-content>
+  </md-card>
+</md-content>

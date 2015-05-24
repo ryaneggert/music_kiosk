@@ -79,24 +79,28 @@ kiosk.config(function($routeProvider, $locationProvider) {
 });
 
 kiosk.controller('homeController', function($scope, $http, $location) {
-  // $http.get('/api/home')
-  //   .success(function(data) {
-  //     console.log(data);
-  //     $scope.currentgames = data.games;
-  //     $scope.cardsets = data.cardsets;
-  //     $scope.currentUser = data.currUser;
-  //   })
-  //   .error(function(data) {
-  //     console.log("Error: " + data);
-  //   });
+  $http.get('/videos')
+    .success(function(playlists) {
+      $scope.playlists = playlists;
+      $scope.categories = playlists.map(function(plt) {
+        return plt.name;
+      });
+      var videosArr = playlists.map(function(plt) {
+        return plt.videos;
+      });
+      $scope.videos = [].concat.apply([],videosArr);
 
+    })
+    .error(function(data) {
+      console.log("Error: " + data);
+    });
 });
 
 kiosk.controller('splashController', function($scope, $http, $location) {
   $scope.explore = function(event) {
     event.preventDefault();
     // Tell server to update video database
-    $http.post('/videos', {
+    $http.post('/videos/update', {
         action: 'fetch'
       })
       .success(function(update) {

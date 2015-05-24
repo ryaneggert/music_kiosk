@@ -6,7 +6,7 @@ body {
   overflow: hidden;
 }
 
-md-card {
+md-card.splash {
   background-color: #fff;
   height: 100%;
 }
@@ -21,6 +21,15 @@ md-content.md-default-theme {
 
 md-content.splash {
   overflow: hidden;
+}
+
+md-card-content.videobrowsecontent {
+  overflow: auto;
+}
+md-grid-tile img{
+    width:100%;
+    height:auto;
+    max-height:100%;
 }
 
 .md-display-3 {

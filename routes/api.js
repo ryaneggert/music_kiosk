@@ -30,6 +30,26 @@ var parseresults = function(playlistres) {
   return newVideos;
 };
 
+var getplaylistItems = function(id, errs, page, callback) {
+  YouTube.playlistItems.list({
+    part: "id,snippet",
+    playlistId: id,
+    maxResults: 3,
+    pageToken: page,
+  }, function(api_err, newplaylistdata) {
+    var nextpage = null;
+    if (api_err) {
+      errs.push({
+        'error': 'api_error',
+        'info': api_err
+      });
+    } else {
+      nextpage = newplaylistdata.nextPageToken;
+    }
+    callback(nextpage, errs, newplaylistdata);
+  });
+};
+
 api.videos = function(req, res) {
   // Function definitions //
 
@@ -110,6 +130,14 @@ api.videos = function(req, res) {
   // Update database with new videos
 
   // Send confirmation of update
+};
+
+api.playlists = function(req, res) {
+  Playlist
+    .find({})
+    .exec(function(err, playlists) {
+      res.send(playlists);
+    });
 };
 
 api.makedb = function(req, res) {
