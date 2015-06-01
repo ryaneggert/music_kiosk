@@ -1,4 +1,4 @@
-var kiosk = angular.module('kiosk', ['ngRoute', 'ngTouch', 'ngMaterial', 'ngMessages', 'truncate'])
+var kiosk = angular.module('kiosk', ['ngRoute', 'ngTouch', 'ngMaterial', 'ngMessages', 'ngFx', 'ngAnimate', 'truncate', 'angularUtils.directives.dirPagination'])
   .factory('focus', function($timeout) {
     return function(id) {
       // timeout makes sure that it is invoked after any other event has been triggered.
@@ -33,6 +33,28 @@ var kiosk = angular.module('kiosk', ['ngRoute', 'ngTouch', 'ngMaterial', 'ngMess
     };
     return searchService;
   })
+  .service('Tools', function() {
+    var toolService = {};
+    toolService.shuffle = function(array) {
+      var currentIndex = array.length,
+        temporaryValue, randomIndex;
+      // While there remain elements to shuffle...
+      while (0 !== currentIndex) {
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }
+      return array;
+    };
+    return toolService;
+  })
+  .config(function(paginationTemplateProvider) {
+    paginationTemplateProvider.setPath('./dirPagination.tpl.html');
+  })
   .config(function($mdThemingProvider) {
     $mdThemingProvider.theme('default')
       .primaryPalette('blue', {
@@ -56,6 +78,30 @@ kiosk.directive('eventFocus', function(focus) {
     scope.$on('$destroy', function() {
       elem.off(attr.eventFocus);
     });
+  };
+});
+
+kiosk.directive('onFinishRender', function($timeout) {
+  return {
+    restrict: 'A',
+    link: function(scope, element, attr) {
+      if (scope.$last === true) {
+        $timeout(function() {
+          scope.$emit('ngRepeatFinished');
+        });
+      }
+    }
+  }
+});
+
+kiosk.filter('offset', function() {
+  return function(input, start) {
+    if (input) {
+      start = parseInt(start, 10);
+      return input.slice(start);
+    } else {
+      return;
+    }
   };
 });
 
@@ -88,7 +134,46 @@ kiosk.config(function($routeProvider, $locationProvider) {
   });
 });
 
-kiosk.controller('homeController', function($scope, $http, $location, Search) {
+kiosk.controller('homeController', function($scope, $http, $location, $filter, Search, Tools) {
+  var range = function(i) {
+    return i ? range(i - 1).concat(i) : []
+  };
+  // $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
+  //   console.log('repeatfinish')
+
+  // });
+  $scope.applyfilters = function() {
+    $scope.filteredvids = $filter('filter')($scope.videos, {
+      name: $scope.searchText
+    });
+
+
+  };
+  $scope.calculatePages = function() {
+    $scope.pages = Math.ceil($scope.filteredvids.length / $scope.itemsPerPage);
+    console.log('Pages: ', $scope.pages);
+    $scope.pagelist = range(Math.max($scope.pages, 1));
+    console.log($scope.pagelist)
+  };
+
+  $scope.updateCurrentPage = function() {
+    if ($scope.currentPage > $scope.pages - 1) {
+      $scope.currentPage = $scope.pages - 1;
+    }
+  };
+
+  $scope.$on('searchUpdate', function() {
+    $scope.searchText = Search.text;
+    console.log('curpage: ', $scope.currentPage)
+    $scope.applyfilters();
+    $scope.calculatePages();
+    $scope.updateCurrentPage();
+  });
+  $scope.filteredvids = [];
+  $scope.itemsPerPage = 6;
+  $scope.currentPage = 0;
+
+
   $http.get('/videos')
     .success(function(playlists) {
       $scope.playlists = playlists;
@@ -98,15 +183,14 @@ kiosk.controller('homeController', function($scope, $http, $location, Search) {
       var videosArr = playlists.map(function(plt) {
         return plt.videos;
       });
-      $scope.videos = [].concat.apply([], videosArr);
-
+      $scope.videos = Tools.shuffle([].concat.apply([], videosArr));
+      $scope.filteredvids = $scope.videos;
+      $scope.calculatePages();
     })
     .error(function(data) {
       console.log("Error: " + data);
     });
-  $scope.$on('searchUpdate', function() {
-    $scope.searchText = Search.text;
-  });
+
 
 });
 
@@ -163,8 +247,8 @@ kiosk.controller('toolbarController', function($scope, $location, $window, Searc
   };
   $scope.toggleSearchBar = function() {
     if (!$scope.show_searchBar) {
-    $scope.show_searchBar = !$scope.show_searchBar;
-  } // Else this just hides iOS keyboard on click by removing focus from input.
+      $scope.show_searchBar = !$scope.show_searchBar;
+    } // Else this just hides iOS keyboard on click by removing focus from input.
   };
   $scope.updateSearch = function() {
     Search.update($scope.searchInput);

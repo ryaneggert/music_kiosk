@@ -36,11 +36,6 @@ md-grid-tile img {
 .md-display-3 {
   color: rgb(30, 30, 30);
 }
-/*div.welcomebutton {
-  width: 60%;
-  margin: auto;
-}
-*/
 
 button.welcome {
   width: 60%;
@@ -65,7 +60,6 @@ input.search {
 }
 
 md-toolbar.md-default-theme md-icon.clearsearch {
-  /*color: rgb(33,150,243);*/
   color: #8BC5F3;
 }
 
@@ -73,15 +67,11 @@ md-toolbar.md-default-theme md-icon.clearsearch.invisible {
   color: rgba(255, 255, 255, 0) !important;
 }
 
-.unclickable {}
-
 input.search::-webkit-input-placeholder {
   color: #D1E4F6;
 }
 
 input.search::-moz-placeholder {
-  /* Firefox 19+ */
-
   color: #D1E4F6;
 }
 
