@@ -1,4 +1,4 @@
-var kiosk = angular.module('kiosk', ['ngRoute', 'ngTouch', 'ngMaterial', 'ngMessages', 'ngFx', 'ngAnimate', 'truncate', 'angularUtils.directives.dirPagination'])
+var kiosk = angular.module('kiosk', ['ngRoute', 'ngTouch', 'ngMaterial', 'ngMessages', 'ngFx', 'ngAnimate', 'truncate'])
   .factory('focus', function($timeout) {
     return function(id) {
       // timeout makes sure that it is invoked after any other event has been triggered.
@@ -51,9 +51,6 @@ var kiosk = angular.module('kiosk', ['ngRoute', 'ngTouch', 'ngMaterial', 'ngMess
       return array;
     };
     return toolService;
-  })
-  .config(function(paginationTemplateProvider) {
-    paginationTemplateProvider.setPath('./dirPagination.tpl.html');
   })
   .config(function($mdThemingProvider) {
     $mdThemingProvider.theme('default')
