@@ -6,7 +6,7 @@ body {
   overflow: hidden;
 }
 
-md-card {
+md-card.splash {
   background-color: #fff;
   height: 100%;
 }
@@ -23,20 +23,64 @@ md-content.splash {
   overflow: hidden;
 }
 
+md-card-content.videobrowsecontent {
+  overflow: auto;
+}
+
+md-grid-tile img {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+}
+
 .md-display-3 {
   color: rgb(30, 30, 30);
 }
-/*div.welcomebutton {
-  width: 60%;
-  margin: auto;
-}
-*/
 
 button.welcome {
   width: 60%;
   margin: auto;
   font-size: 40px;
   height: 60px;
+}
+/*Toolbar*/
+
+md-input-container.search {
+  padding: 0;
+}
+
+md-input-container.md-default-theme .md-input {
+  color: white;
+  border-color: #75ACE4;
+}
+
+input.search {
+  margin-right: -54px;
+  width: 340px;
+}
+
+md-toolbar.md-default-theme md-icon.clearsearch {
+  color: #8BC5F3;
+}
+
+md-toolbar.md-default-theme md-icon.clearsearch.invisible {
+  color: rgba(255, 255, 255, 0) !important;
+}
+
+input.search::-webkit-input-placeholder {
+  color: #D1E4F6;
+}
+
+input.search::-moz-placeholder {
+  color: #D1E4F6;
+}
+
+input.search:-ms-input-placeholder {
+  color: #D1E4F6;
+}
+
+.selected {
+  background-color: blue;
 }
 
 [ng\:cloak],
@@ -47,4 +91,8 @@ button.welcome {
 
 md-card {
   background-color: white;
+}
+
+button.metafilters {
+  color: rgb(155,155,155);
 }

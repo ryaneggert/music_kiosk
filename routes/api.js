@@ -4,7 +4,6 @@ var path = require('path');
 var models = require('../models/models');
 var Playlist = models.playlist;
 var YouTube = require("youtube-api");
-console.log(process.env.KIOSK_GOOGLEAPI)
 YouTube.authenticate({
   type: "key",
   key: process.env.KIOSK_GOOGLEAPI
@@ -51,11 +50,12 @@ var getplaylistItems = function(id, errs, page, callback) {
   });
 };
 
-
-
-
 api.videos = function(req, res) {
+  // Function definitions //
+
   var updatedbplaylist = function(playlistId, videoArray) {
+    // This is called once per playlist. Should not include res.send here
+    // (or should modify)
     Playlist
       .findOneAndUpdate({
         playlistId: playlistId
@@ -65,17 +65,10 @@ api.videos = function(req, res) {
       .exec(function(err, update) {
         if (err) {
           console.log('ERROR UPDATING DATABASE: ', err);
-          res.send({
-            failed: true
-          });
-        } else {
-          res.send({
-            failed: false
-          });
         }
       });
   };
-  var loopthroughplaylist = function(id, errs, results, page) {
+  var loopthroughplaylist = function(id, errs, results, page, index) {
     if (page === -1) {
       page = (function() {
         return;
@@ -95,10 +88,13 @@ api.videos = function(req, res) {
         updatedbplaylist(id, dbVideos);
         return;
       } else {
-        loopthroughplaylist(id, errs, results, page);
+        loopthroughplaylist(id, errs, results, page, index);
       }
     });
   };
+
+  // Process //
+
   var errs = [];
   // Get playlists from database
   Playlist
@@ -116,6 +112,15 @@ api.videos = function(req, res) {
           // Get updated playlist from YouTube
           loopthroughplaylist(playlists[i].playlistId, [], [], -1);
         }
+        if (errs.length > 0) {
+          res.send({
+            failed: true
+          });
+        } else {
+          res.send({
+            failed: false
+          });
+        }
       } else {
         res.send({
           failed: true,
@@ -123,12 +128,14 @@ api.videos = function(req, res) {
         });
       }
     });
+};
 
-  // YouTube API call to get all videos from playlists
-
-  // Update database with new videos
-
-  // Send confirmation of update
+api.playlists = function(req, res) {
+  Playlist
+    .find({})
+    .exec(function(err, playlists) {
+      res.send(playlists);
+    });
 };
 
 api.makedb = function(req, res) {
@@ -139,14 +146,25 @@ api.makedb = function(req, res) {
     "videos": []
   };
 
+  pcplist = {
+    "name": "PowerChords",
+    "description": "Olin PowerChords a cappella group.",
+    "playlistId": "PLth5yjJPR2kk6pLI1hJmwbFkRO4aN7a3N",
+    "videos": []
+  };
+
   OCO = new Playlist(ocoplist);
+  PC = new Playlist(pcplist);
   OCO.save(function(err, saved) {
     console.log(err || saved);
-    Playlist
-      .find({})
-      .exec(function(err, playlists) {
-        res.send(err || playlists);
-      });
+    PC.save(function(err, saved) {
+      console.log(err || saved);
+      Playlist
+        .find({})
+        .exec(function(err, playlists) {
+          res.send(err || playlists);
+        });
+    });
   });
 };
 

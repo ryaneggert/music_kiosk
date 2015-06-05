@@ -1,0 +1,36 @@
+<md-content flex layout-padding layout-fill layout="column">
+  <md-card>
+    <md-card-content layout="column">
+      <h1 class="md-title">Select by group</h1>
+      <div layout="row" layout-margin>
+        <md-button ng-repeat="category in categories" id="{{category}}" class="md-raised" ng-click="toggleFilterButton(category, $index)" ng-class="{'md-primary md-hue-2':filterButtonSelected[$index]}">{{category}}</md-button>
+        <md-button id="selectall" class="md-default metafilters" ng-click="toggleFilterButton(category, $index)" ng-show="notAllSelected()">Select All</md-button>
+        <md-button id="clearall" class="md-default metafilters" ng-click="toggleFilterButton(category, $index)" ng-show='notAllDeSelected()'>Select None</md-button>
+      </div>
+    </md-card-content>
+  </md-card>
+  <md-card flex>
+    <md-card-content layout="row" flex layout-padding layout-fill class="videobrowsecontent">
+      <md-tabs flex md-selected="currentPage" md-align-tabs="bottom" md-center-tabs=1>
+        <md-tab ng-repeat="page in pagelist" md-on-select="onTabSelected(page)" md-on-deselect="announceDeselected(page)">
+          <md-tab-label>
+            {{page}}
+          </md-tab-label>
+          <md-tab-body>
+            <md-grid-list md-cols="{{itemsPerPage/2}}" md-row-height="16:9" md-gutter="30px">
+              <md-grid-tile class="md-whiteframe-z2" md-rowspan="1" md-colspan="1" md-colspan-sm="1" ng-repeat="video in filteredvids |offset:currentPage*itemsPerPage|limitTo:itemsPerPage">
+                <img src="{{video.thumbnail.url}}" height="{{video.thumbnail.height}}" width="{{video.thumbnail.width}}">
+                <md-grid-tile-footer>
+                  <h3>{{video.name | characters:55}}</h3>
+                </md-grid-tile-footer>
+              </md-grid-tile>
+            </md-grid-list>
+            <p ng-if="filteredvids.length === 0"> No videos found </p>
+          </md-tab-body>
+        </md-tab>
+      </md-tabs>
+    </md-card-content>
+  </md-card>
+</md-content>
+<!-- ng-swipe-left="videoPageForward(filteredvids.length)" ng-swipe-right="videoPageBackward(filteredvids.length)" -->
+<!-- ng-repeat="video in ($parent.filteredvids = (videos | filter:searchText)) | offset:currentPage*itemsPerPage|limitTo:itemsPerPage"  on-finish-render="ngRepeatFinished"-->
