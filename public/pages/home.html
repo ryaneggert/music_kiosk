@@ -3,7 +3,9 @@
     <md-card-content layout="column">
       <h1 class="md-title">Select by group</h1>
       <div layout="row" layout-margin>
-        <md-button ng-repeat="category in categories" class="md-raised" ng-click="">{{category}}</md-button>
+        <md-button ng-repeat="category in categories" id="{{category}}" class="md-raised" ng-click="toggleFilterButton(category, $index)" ng-class="{'md-primary md-hue-2':filterButtonSelected[$index]}">{{category}}</md-button>
+        <md-button id="selectall" class="md-default metafilters" ng-click="toggleFilterButton(category, $index)" ng-show="notAllSelected()">Select All</md-button>
+        <md-button id="clearall" class="md-default metafilters" ng-click="toggleFilterButton(category, $index)" ng-show='notAllDeSelected()'>Select None</md-button>
       </div>
     </md-card-content>
   </md-card>
@@ -31,5 +33,4 @@
   </md-card>
 </md-content>
 <!-- ng-swipe-left="videoPageForward(filteredvids.length)" ng-swipe-right="videoPageBackward(filteredvids.length)" -->
-
 <!-- ng-repeat="video in ($parent.filteredvids = (videos | filter:searchText)) | offset:currentPage*itemsPerPage|limitTo:itemsPerPage"  on-finish-render="ngRepeatFinished"-->

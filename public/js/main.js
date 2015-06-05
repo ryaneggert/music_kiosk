@@ -88,7 +88,7 @@ kiosk.directive('onFinishRender', function($timeout) {
         });
       }
     }
-  }
+  };
 });
 
 kiosk.filter('offset', function() {
@@ -133,7 +133,7 @@ kiosk.config(function($routeProvider, $locationProvider) {
 
 kiosk.controller('homeController', function($scope, $http, $location, $filter, Search, Tools) {
   var range = function(i) {
-    return i ? range(i - 1).concat(i) : []
+    return i ? range(i - 1).concat(i) : [];
   };
   // $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
   //   console.log('repeatfinish')
@@ -141,7 +141,7 @@ kiosk.controller('homeController', function($scope, $http, $location, $filter, S
   // });
   $scope.applyfilters = function() {
     $scope.filteredvids = $filter('filter')($scope.videos, {
-      name: $scope.searchText
+      name: $scope.searchText, playlists: ['OCO']
     });
 
 
@@ -156,6 +156,29 @@ kiosk.controller('homeController', function($scope, $http, $location, $filter, S
   $scope.updateCurrentPage = function() {
     if ($scope.currentPage > $scope.pages - 1) {
       $scope.currentPage = $scope.pages - 1;
+    }
+  };
+
+
+
+  $scope.toggleFilterButton = function(group, idx) {
+    console.log(group, idx)
+    $scope.filterButtonSelected[idx] = !$scope.filterButtonSelected[idx];
+  };
+
+  $scope.notAllSelected = function() {
+    if ($scope.filterButtonSelected.reduce(function(pv, cv) { return pv + cv; }, 0) < $scope.categories.length) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  $scope.notAllDeSelected = function() {
+    if ($scope.filterButtonSelected.reduce(function(pv, cv) { return pv + cv; }, 0) > 0) {
+      return true;
+    } else {
+      return false;
     }
   };
 
@@ -180,6 +203,11 @@ kiosk.controller('homeController', function($scope, $http, $location, $filter, S
       var videosArr = playlists.map(function(plt) {
         return plt.videos;
       });
+      var zrohd = [];
+      for (var i = 0; i < $scope.categories.length; i++) {
+        zrohd[i] = 0;
+      }
+      $scope.filterButtonSelected = zrohd;
       $scope.videos = Tools.shuffle([].concat.apply([], videosArr));
       $scope.filteredvids = $scope.videos;
       $scope.calculatePages();

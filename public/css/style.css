@@ -79,6 +79,10 @@ input.search:-ms-input-placeholder {
   color: #D1E4F6;
 }
 
+.selected {
+  background-color: blue;
+}
+
 [ng\:cloak],
 [ng-cloak],
 .ng-cloak {
@@ -87,4 +91,8 @@ input.search:-ms-input-placeholder {
 
 md-card {
   background-color: white;
+}
+
+button.metafilters {
+  color: rgb(155,155,155);
 }
