@@ -29,4 +29,17 @@ var playlistSchema = mongoose.Schema({
 });
 
 models.playlist = mongoose.model("Playlist", playlistSchema);
+
+var videoSchema = mongoose.Schema({
+  name: String,
+  description: String,
+  videoId: String,
+  ID: String,
+  thumbnail: {
+    url: String,
+    width: Number,
+    height: Number
+  }
+});
+models.video = mongoose.model("Video", videoSchema);
 module.exports = models;

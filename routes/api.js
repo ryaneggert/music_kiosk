@@ -3,6 +3,7 @@
 var path = require('path');
 var models = require('../models/models');
 var Playlist = models.playlist;
+var Video = models.video;
 var YouTube = require("youtube-api");
 YouTube.authenticate({
   type: "key",
@@ -53,6 +54,16 @@ var getplaylistItems = function(id, errs, page, callback) {
 api.videos = function(req, res) {
   // Function definitions //
 
+  var saveIndividualVideos = function(videoArray) {
+    var these_videos = [];
+    for (var i = videoArray.length - 1; i >= 0; i--) {
+      these_videos.push(new Video(videoArray[i]));
+    }
+    Video.create(these_videos, function(err, videos) {
+      console.log(err);
+      console.log(videos);
+    });
+  };
   var updatedbplaylist = function(playlistId, videoArray) {
     // This is called once per playlist. Should not include res.send here
     // (or should modify)
@@ -66,6 +77,7 @@ api.videos = function(req, res) {
         if (err) {
           console.log('ERROR UPDATING DATABASE: ', err);
         }
+        saveIndividualVideos(videoArray);
       });
   };
   var loopthroughplaylist = function(id, errs, results, page, index) {
@@ -168,4 +180,14 @@ api.makedb = function(req, res) {
   });
 };
 
+api.video = function(req, res) {
+  Video
+    .findOne({
+      videoId: req.params.videoId
+    })
+    .exec(function(err, vid) {
+      console.log(err);
+      res.send(vid);
+    });
+};
 module.exports = api;

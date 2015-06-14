@@ -135,17 +135,17 @@ kiosk.controller('homeController', function($scope, $http, $location, $filter, S
   var range = function(i) {
     return i ? range(i - 1).concat(i) : [];
   };
-  // $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
-  //   console.log('repeatfinish')
 
-  // });
+  $scope.goToVideo = function(videoId) {
+    $location.path('/watch/' + videoId);
+  };
   $scope.applyfilters = function() {
     $scope.filteredvids = $filter('filter')($scope.videos, {
-      name: $scope.searchText, playlists: ['OCO']
+      name: $scope.searchText,
+      playlists: ['OCO']
     });
-
-
   };
+
   $scope.calculatePages = function() {
     $scope.pages = Math.ceil($scope.filteredvids.length / $scope.itemsPerPage);
     console.log('Pages: ', $scope.pages);
@@ -167,7 +167,9 @@ kiosk.controller('homeController', function($scope, $http, $location, $filter, S
   };
 
   $scope.notAllSelected = function() {
-    if ($scope.filterButtonSelected.reduce(function(pv, cv) { return pv + cv; }, 0) < $scope.categories.length) {
+    if ($scope.filterButtonSelected.reduce(function(pv, cv) {
+        return pv + cv;
+      }, 0) < $scope.categories.length) {
       return true;
     } else {
       return false;
@@ -175,7 +177,9 @@ kiosk.controller('homeController', function($scope, $http, $location, $filter, S
   };
 
   $scope.notAllDeSelected = function() {
-    if ($scope.filterButtonSelected.reduce(function(pv, cv) { return pv + cv; }, 0) > 0) {
+    if ($scope.filterButtonSelected.reduce(function(pv, cv) {
+        return pv + cv;
+      }, 0) > 0) {
       return true;
     } else {
       return false;
@@ -192,6 +196,7 @@ kiosk.controller('homeController', function($scope, $http, $location, $filter, S
   $scope.filteredvids = [];
   $scope.itemsPerPage = 6;
   $scope.currentPage = 0;
+  $scope.filterButtonSelected = [];
 
 
   $http.get('/videos')
@@ -243,8 +248,16 @@ kiosk.controller('splashController', function($scope, $http, $location) {
   };
 });
 
-kiosk.controller('videoController', function($scope, $http, $location) {
-
+kiosk.controller('videoController', function($scope, $http, $location, $routeParams) {
+  $http.post('/videos', {
+      videoId: $routeParams.id
+    })
+    .success(function(video) {
+      console.log(video)
+    })
+    .error(function(data) {
+      console.log("Error: " + data);
+    });
 });
 
 kiosk.controller('toolbarController', function($scope, $location, $window, Search) {

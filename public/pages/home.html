@@ -18,7 +18,7 @@
           </md-tab-label>
           <md-tab-body>
             <md-grid-list md-cols="{{itemsPerPage/2}}" md-row-height="16:9" md-gutter="30px">
-              <md-grid-tile class="md-whiteframe-z2" md-rowspan="1" md-colspan="1" md-colspan-sm="1" ng-repeat="video in filteredvids |offset:currentPage*itemsPerPage|limitTo:itemsPerPage">
+              <md-grid-tile class="md-whiteframe-z2" md-rowspan="1" md-colspan="1" md-colspan-sm="1" ng-repeat="video in filteredvids |offset:currentPage*itemsPerPage|limitTo:itemsPerPage" ng-click="goToVideo(video.videoId)">
                 <img src="{{video.thumbnail.url}}" height="{{video.thumbnail.height}}" width="{{video.thumbnail.width}}">
                 <md-grid-tile-footer>
                   <h3>{{video.name | characters:55}}</h3>
