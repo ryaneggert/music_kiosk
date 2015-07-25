@@ -1,7 +1,14 @@
 <md-content flex layout-padding layout-fill layout="column">
-  <md-card flex>
+  <md-card>
     <md-card-content layout="column">
-      <h1 class="md-display-3">Watch {{video.name}}</h1>
+      <h1 class="md-headline">{{video.name}}</h1>
+<!--       <md-divider> </md-divider>
+      <p>{{video.description}}</p> -->
+    </md-card-content>
+  </md-card>
+  <md-card flex>
+    <md-card-content layout="row">
+      <youtube-video flex video-id="this_video_id" player-width="'100%'"></youtube-video>
     </md-card-content>
   </md-card>
 </md-content>
