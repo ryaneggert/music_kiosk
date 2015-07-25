@@ -1,4 +1,4 @@
-var kiosk = angular.module('kiosk', ['ngRoute', 'ngTouch', 'ngMaterial', 'ngMessages', 'ngFx', 'ngAnimate', 'truncate'])
+var kiosk = angular.module('kiosk', ['ngRoute', 'ngTouch', 'ngMaterial', 'ngMessages', 'ngFx', 'ngAnimate', 'truncate', 'youtube-embed'])
   .factory('focus', function($timeout) {
     return function(id) {
       // timeout makes sure that it is invoked after any other event has been triggered.
@@ -249,11 +249,15 @@ kiosk.controller('splashController', function($scope, $http, $location) {
 });
 
 kiosk.controller('videoController', function($scope, $http, $location, $routeParams) {
+  console.log($routeParams)
   $http.post('/videos', {
       videoId: $routeParams.id
     })
     .success(function(video) {
-      console.log(video)
+      console.log('VIDEO')
+      console.log(video);
+      $scope.video = video;
+      $scope.this_video_id = $scope.video.videoId;
     })
     .error(function(data) {
       console.log("Error: " + data);

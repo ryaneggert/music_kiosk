@@ -181,12 +181,13 @@ api.makedb = function(req, res) {
 };
 
 api.video = function(req, res) {
+  console.log(req.body)
   Video
     .findOne({
-      videoId: req.params.videoId
+      videoId: req.body.videoId
     })
     .exec(function(err, vid) {
-      console.log(err);
+      console.log(err, vid);
       res.send(vid);
     });
 };
