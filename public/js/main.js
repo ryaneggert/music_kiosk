@@ -1,4 +1,4 @@
-var kiosk = angular.module('kiosk', ['ngRoute', 'ngTouch', 'ngMaterial', 'ngMessages', 'ngFx', 'ngAnimate', 'truncate'])
+var kiosk = angular.module('kiosk', ['ngRoute', 'ngTouch', 'ngMaterial', 'ngMessages', 'ngFx', 'ngAnimate', 'truncate', 'youtube-embed'])
   .factory('focus', function($timeout) {
     return function(id) {
       // timeout makes sure that it is invoked after any other event has been triggered.
@@ -135,17 +135,17 @@ kiosk.controller('homeController', function($scope, $http, $location, $filter, S
   var range = function(i) {
     return i ? range(i - 1).concat(i) : [];
   };
-  // $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
-  //   console.log('repeatfinish')
 
-  // });
+  $scope.goToVideo = function(videoId) {
+    $location.path('/watch/' + videoId);
+  };
   $scope.applyfilters = function() {
     $scope.filteredvids = $filter('filter')($scope.videos, {
-      name: $scope.searchText, playlists: ['OCO']
+      name: $scope.searchText,
+      playlists: ['OCO']
     });
-
-
   };
+
   $scope.calculatePages = function() {
     $scope.pages = Math.ceil($scope.filteredvids.length / $scope.itemsPerPage);
     console.log('Pages: ', $scope.pages);
@@ -167,7 +167,9 @@ kiosk.controller('homeController', function($scope, $http, $location, $filter, S
   };
 
   $scope.notAllSelected = function() {
-    if ($scope.filterButtonSelected.reduce(function(pv, cv) { return pv + cv; }, 0) < $scope.categories.length) {
+    if ($scope.filterButtonSelected.reduce(function(pv, cv) {
+        return pv + cv;
+      }, 0) < $scope.categories.length) {
       return true;
     } else {
       return false;
@@ -175,7 +177,9 @@ kiosk.controller('homeController', function($scope, $http, $location, $filter, S
   };
 
   $scope.notAllDeSelected = function() {
-    if ($scope.filterButtonSelected.reduce(function(pv, cv) { return pv + cv; }, 0) > 0) {
+    if ($scope.filterButtonSelected.reduce(function(pv, cv) {
+        return pv + cv;
+      }, 0) > 0) {
       return true;
     } else {
       return false;
@@ -190,8 +194,10 @@ kiosk.controller('homeController', function($scope, $http, $location, $filter, S
     $scope.updateCurrentPage();
   });
   $scope.filteredvids = [];
-  $scope.itemsPerPage = 6;
+  $scope.itemsPerPage = 16;
+  $scope.rowsPerPage = 4;
   $scope.currentPage = 0;
+  $scope.filterButtonSelected = [];
 
 
   $http.get('/videos')
@@ -243,8 +249,20 @@ kiosk.controller('splashController', function($scope, $http, $location) {
   };
 });
 
-kiosk.controller('videoController', function($scope, $http, $location) {
-
+kiosk.controller('videoController', function($scope, $http, $location, $routeParams) {
+  console.log($routeParams)
+  $http.post('/videos', {
+      videoId: $routeParams.id
+    })
+    .success(function(video) {
+      console.log('VIDEO')
+      console.log(video);
+      $scope.video = video;
+      $scope.this_video_id = $scope.video.videoId;
+    })
+    .error(function(data) {
+      console.log("Error: " + data);
+    });
 });
 
 kiosk.controller('toolbarController', function($scope, $location, $window, Search) {
@@ -253,7 +271,7 @@ kiosk.controller('toolbarController', function($scope, $location, $window, Searc
   $scope.show_back = true;
   $scope.$on('$locationChangeStart', function(event, next, current) {
     if ($location.path() == "/home") {
-      $scope.show_search = true;
+      $scope.show_search = false; // temporary override
     } else {
       $scope.show_search = false;
     }
@@ -263,6 +281,7 @@ kiosk.controller('toolbarController', function($scope, $location, $window, Searc
       $scope.show_back = true;
     }
   });
+  // TEMP OVERRIDE
   $scope.goBack = function(event) {
     $window.history.back();
   };
