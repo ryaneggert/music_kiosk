@@ -194,7 +194,8 @@ kiosk.controller('homeController', function($scope, $http, $location, $filter, S
     $scope.updateCurrentPage();
   });
   $scope.filteredvids = [];
-  $scope.itemsPerPage = 6;
+  $scope.itemsPerPage = 16;
+  $scope.rowsPerPage = 4;
   $scope.currentPage = 0;
   $scope.filterButtonSelected = [];
 
@@ -270,7 +271,7 @@ kiosk.controller('toolbarController', function($scope, $location, $window, Searc
   $scope.show_back = true;
   $scope.$on('$locationChangeStart', function(event, next, current) {
     if ($location.path() == "/home") {
-      $scope.show_search = true;
+      $scope.show_search = false; // temporary override
     } else {
       $scope.show_search = false;
     }
@@ -280,6 +281,7 @@ kiosk.controller('toolbarController', function($scope, $location, $window, Searc
       $scope.show_back = true;
     }
   });
+  // TEMP OVERRIDE
   $scope.goBack = function(event) {
     $window.history.back();
   };
