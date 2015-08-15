@@ -142,7 +142,7 @@ kiosk.controller('homeController', function($scope, $http, $location, $filter, S
   $scope.applyfilters = function() {
     $scope.filteredvids = $filter('filter')($scope.videos, {
       name: $scope.searchText,
-      playlists: ['OCO']
+      // playlists: ['OCO']
     });
   };
 
@@ -271,7 +271,7 @@ kiosk.controller('toolbarController', function($scope, $location, $window, Searc
   $scope.show_back = true;
   $scope.$on('$locationChangeStart', function(event, next, current) {
     if ($location.path() == "/home") {
-      $scope.show_search = false; // temporary override
+      $scope.show_search = true;
     } else {
       $scope.show_search = false;
     }
