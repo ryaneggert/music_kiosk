@@ -181,7 +181,7 @@ api.makedb = function(req, res) {
 };
 
 api.video = function(req, res) {
-  console.log(req.body)
+  console.log(req.body);
   Video
     .findOne({
       videoId: req.body.videoId

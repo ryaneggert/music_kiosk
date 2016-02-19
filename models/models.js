@@ -42,4 +42,24 @@ var videoSchema = mongoose.Schema({
   }
 });
 models.video = mongoose.model("Video", videoSchema);
+
+var songSchema = mongoose.Schema({
+  title: String,
+  comments: String,
+  writeup: String,
+  composer: String,
+  artist: String,
+  album: String,
+  rec_date: String,
+  duration: String,
+  sample_rate: String,
+
+  sc_account: String,
+  sc_id: Number,
+  secret_token: String,
+  secret_uri: String
+
+});
+models.song = mongoose.model("Song", songSchema);
+
 module.exports = models;

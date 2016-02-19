@@ -36,7 +36,7 @@ app.get('/dev/makedb', api.makedb);
 
 app.post('/videos/update', api.videos);
 app.get('/videos', api.playlists);
-app.post('/videos', api.video)
+app.post('/videos', api.video);
 
 // app.get('/api/home', auths.isAuth_api, home.home);
 

@@ -17,7 +17,7 @@ var kiosk = angular.module('kiosk', ['ngRoute', 'ngTouch', 'ngMaterial', 'ngMess
 
     service.response = function(response) {
       if (response.data === 'redir') {
-        console.log('DEAUTHD');
+        console.log('DEAUTHD')
         $window.location.reload();
       }
       return response;
@@ -55,7 +55,7 @@ var kiosk = angular.module('kiosk', ['ngRoute', 'ngTouch', 'ngMaterial', 'ngMess
   .config(function($mdThemingProvider) {
     $mdThemingProvider.theme('default')
       .primaryPalette('blue', {
-        'default': '700',
+        'default': '900',
       })
       .accentPalette('orange', {
         'default': '300',
@@ -256,7 +256,7 @@ kiosk.controller('videoController', function($scope, $http, $location, $routePar
     })
     .success(function(video) {
       console.log('VIDEO')
-      console.log(video);
+      console.log(video)
       $scope.video = video;
       $scope.this_video_id = $scope.video.videoId;
     })
