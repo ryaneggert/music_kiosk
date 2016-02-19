@@ -96,3 +96,7 @@ md-card {
 button.metafilters {
   color: rgb(155,155,155);
 }
+
+h1.md-headline {
+  margin: 0;
+}
