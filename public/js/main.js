@@ -203,6 +203,7 @@ kiosk.controller('homeController', function($scope, $http, $location, $filter, S
   $http.get('/videos')
     .success(function(playlists) {
       $scope.playlists = playlists;
+      console.log(playlists)
       $scope.categories = playlists.map(function(plt) {
         return plt.name;
       });
@@ -214,9 +215,23 @@ kiosk.controller('homeController', function($scope, $http, $location, $filter, S
         zrohd[i] = 0;
       }
       $scope.filterButtonSelected = zrohd;
-      $scope.videos = Tools.shuffle([].concat.apply([], videosArr));
-      $scope.filteredvids = $scope.videos;
-      $scope.calculatePages();
+      var videoArray = [].concat.apply([], videosArr);
+      $http.get('/songs')
+        .success(function(songs) {
+            console.log('sibgs')
+            console.log(songs);
+            console.log(videosArr)
+            var content_list = [].concat.apply(videoArray, songs);
+            $scope.videos = Tools.shuffle([].concat.apply([], content_list));
+            $scope.filteredvids = $scope.videos;
+            console.log('all')
+            console.log($scope.videos)
+            $scope.calculatePages();
+        })
+        .error(function(data){
+          console.log("Error: " + data);
+        });
+
     })
     .error(function(data) {
       console.log("Error: " + data);

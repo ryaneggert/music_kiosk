@@ -4,6 +4,7 @@ var path = require('path');
 var models = require('../models/models');
 var Playlist = models.playlist;
 var Video = models.video;
+var Song = models.song;
 var YouTube = require("youtube-api");
 YouTube.authenticate({
   type: "key",
@@ -23,9 +24,11 @@ var parseresults = function(playlistres) {
     var this_vid = plitems[i];
     vidobj.name = this_vid.snippet.title;
     vidobj.description = this_vid.snippet.description;
+    vidobj.type = "video";
     vidobj.videoId = this_vid.snippet.resourceId.videoId;
     vidobj.ID = this_vid.id;
     vidobj.thumbnail = this_vid.snippet.thumbnails[thumbnailSize];
+    // vidobj["type"] = "video";
     newVideos.push(vidobj);
   }
   return newVideos;
@@ -61,12 +64,15 @@ api.videos = function(req, res) {
     }
     Video.create(these_videos, function(err, videos) {
       console.log(err);
-      console.log(videos);
+      // console.log(videos);
+
     });
   };
   var updatedbplaylist = function(playlistId, videoArray) {
     // This is called once per playlist. Should not include res.send here
     // (or should modify)
+    console.log("VA");
+    console.log(videoArray);
     Playlist
       .findOneAndUpdate({
         playlistId: playlistId
@@ -80,6 +86,7 @@ api.videos = function(req, res) {
         saveIndividualVideos(videoArray);
       });
   };
+
   var loopthroughplaylist = function(id, errs, results, page, index) {
     if (page === -1) {
       page = (function() {
@@ -181,7 +188,7 @@ api.makedb = function(req, res) {
 };
 
 api.video = function(req, res) {
-  console.log(req.body);
+  // console.log(req.body);
   Video
     .findOne({
       videoId: req.body.videoId
@@ -191,4 +198,25 @@ api.video = function(req, res) {
       res.send(vid);
     });
 };
+
+api.song = function (req, res) {
+  Song
+  .findOne({
+    _id: req.body.songId
+  })
+  .exec(function(err, sng) {
+    console.log(err);
+    res.send(sng);
+  });
+};
+
+api.song_list = function(req, res) {
+  Song
+  .find()
+  .select('title artist composer _id album type')
+  .exec(function(err, all_songs) {
+    res.send(all_songs);
+  });
+};
+
 module.exports = api;

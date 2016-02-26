@@ -35,6 +35,7 @@ var videoSchema = mongoose.Schema({
   description: String,
   videoId: String,
   ID: String,
+  // type: String,
   thumbnail: {
     url: String,
     width: Number,
@@ -53,6 +54,7 @@ var songSchema = mongoose.Schema({
   rec_date: String,
   duration: String,
   sample_rate: String,
+  type: String,
 
   sc_account: String,
   sc_id: Number,
