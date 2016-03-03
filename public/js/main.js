@@ -120,6 +120,10 @@ kiosk.config(function($routeProvider, $locationProvider) {
       templateUrl: '../pages/video.html',
       controller: 'videoController'
     })
+    .when('/listen/:id', {
+      templateUrl: '../pages/song.html',
+      controller: 'songController'
+    })
     .otherwise({
       redirectTo: '/welcome'
     });
@@ -134,6 +138,14 @@ kiosk.config(function($routeProvider, $locationProvider) {
 kiosk.controller('homeController', function($scope, $http, $location, $filter, Search, Tools) {
   var range = function(i) {
     return i ? range(i - 1).concat(i) : [];
+  };
+
+  $scope.goToContent = function(video) {
+    if (video.type !== "song") {
+      $location.path('/watch/' + video.videoId);
+    } else {
+      $location.path('/listen/' + video._id);
+    }
   };
 
   $scope.goToVideo = function(videoId) {
@@ -265,7 +277,6 @@ kiosk.controller('splashController', function($scope, $http, $location) {
 });
 
 kiosk.controller('videoController', function($scope, $http, $location, $routeParams) {
-  console.log($routeParams)
   $http.post('/videos', {
       videoId: $routeParams.id
     })
@@ -278,6 +289,27 @@ kiosk.controller('videoController', function($scope, $http, $location, $routePar
     .error(function(data) {
       console.log("Error: " + data);
     });
+});
+
+kiosk.controller('songController', function($scope, $http, $location, $routeParams, $sce) {
+  $http.post('/songs', {
+      _id: $routeParams.id
+    })
+    .success(function(song) {
+      console.log("Song Rec'd");
+      console.log(song);
+      $scope.song = song;
+    })
+    .error(function(data) {
+      console.log("Error: " + data);
+    });
+
+    $scope.get_sc_link = function(sng) {
+      console.log(sng)
+      var new_link = $sce.trustAsResourceUrl("https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/" + sng.sc_id.toString() + "&amp;color=ff5500&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false");
+      console.log(new_link)
+      return new_link
+    }
 });
 
 kiosk.controller('toolbarController', function($scope, $location, $window, Search) {

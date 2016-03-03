@@ -202,7 +202,7 @@ api.video = function(req, res) {
 api.song = function (req, res) {
   Song
   .findOne({
-    _id: req.body.songId
+    _id: req.body._id
   })
   .exec(function(err, sng) {
     console.log(err);
