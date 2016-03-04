@@ -1,4 +1,4 @@
-var kiosk = angular.module('kiosk', ['ngRoute', 'ngTouch', 'ngMaterial', 'ngMessages', 'ngFx', 'ngAnimate', 'truncate', 'youtube-embed'])
+var kiosk = angular.module('kiosk', ['ngRoute', 'ngTouch', 'ngMaterial', 'ngMessages', 'ngFx', 'ngAnimate', 'truncate', 'ngSanitize', 'youtube-embed'])
   .factory('focus', function($timeout) {
     return function(id) {
       // timeout makes sure that it is invoked after any other event has been triggered.
@@ -17,7 +17,7 @@ var kiosk = angular.module('kiosk', ['ngRoute', 'ngTouch', 'ngMaterial', 'ngMess
 
     service.response = function(response) {
       if (response.data === 'redir') {
-        console.log('DEAUTHD');
+        console.log('DEAUTHD')
         $window.location.reload();
       }
       return response;
@@ -55,7 +55,7 @@ var kiosk = angular.module('kiosk', ['ngRoute', 'ngTouch', 'ngMaterial', 'ngMess
   .config(function($mdThemingProvider) {
     $mdThemingProvider.theme('default')
       .primaryPalette('blue', {
-        'default': '700',
+        'default': '900',
       })
       .accentPalette('orange', {
         'default': '300',
@@ -120,6 +120,10 @@ kiosk.config(function($routeProvider, $locationProvider) {
       templateUrl: '../pages/video.html',
       controller: 'videoController'
     })
+    .when('/listen/:id', {
+      templateUrl: '../pages/song.html',
+      controller: 'songController'
+    })
     .otherwise({
       redirectTo: '/welcome'
     });
@@ -136,13 +140,21 @@ kiosk.controller('homeController', function($scope, $http, $location, $filter, S
     return i ? range(i - 1).concat(i) : [];
   };
 
+  $scope.goToContent = function(video) {
+    if (video.type !== "song") {
+      $location.path('/watch/' + video.videoId);
+    } else {
+      $location.path('/listen/' + video._id);
+    }
+  };
+
   $scope.goToVideo = function(videoId) {
     $location.path('/watch/' + videoId);
   };
   $scope.applyfilters = function() {
     $scope.filteredvids = $filter('filter')($scope.videos, {
       name: $scope.searchText,
-      playlists: ['OCO']
+      // playlists: ['OCO']
     });
   };
 
@@ -203,6 +215,7 @@ kiosk.controller('homeController', function($scope, $http, $location, $filter, S
   $http.get('/videos')
     .success(function(playlists) {
       $scope.playlists = playlists;
+      console.log(playlists)
       $scope.categories = playlists.map(function(plt) {
         return plt.name;
       });
@@ -214,9 +227,23 @@ kiosk.controller('homeController', function($scope, $http, $location, $filter, S
         zrohd[i] = 0;
       }
       $scope.filterButtonSelected = zrohd;
-      $scope.videos = Tools.shuffle([].concat.apply([], videosArr));
-      $scope.filteredvids = $scope.videos;
-      $scope.calculatePages();
+      var videoArray = [].concat.apply([], videosArr);
+      $http.get('/songs')
+        .success(function(songs) {
+            console.log('sibgs')
+            console.log(songs);
+            console.log(videosArr)
+            var content_list = [].concat.apply(videoArray, songs);
+            $scope.videos = Tools.shuffle([].concat.apply([], content_list));
+            $scope.filteredvids = $scope.videos;
+            console.log('all')
+            console.log($scope.videos)
+            $scope.calculatePages();
+        })
+        .error(function(data){
+          console.log("Error: " + data);
+        });
+
     })
     .error(function(data) {
       console.log("Error: " + data);
@@ -250,13 +277,12 @@ kiosk.controller('splashController', function($scope, $http, $location) {
 });
 
 kiosk.controller('videoController', function($scope, $http, $location, $routeParams) {
-  console.log($routeParams)
   $http.post('/videos', {
       videoId: $routeParams.id
     })
     .success(function(video) {
       console.log('VIDEO')
-      console.log(video);
+      console.log(video)
       $scope.video = video;
       $scope.this_video_id = $scope.video.videoId;
     })
@@ -265,13 +291,33 @@ kiosk.controller('videoController', function($scope, $http, $location, $routePar
     });
 });
 
+kiosk.controller('songController', function($scope, $http, $location, $routeParams, $sce) {
+  $http.post('/songs', {
+      _id: $routeParams.id
+    })
+    .success(function(song) {
+      console.log("Song Rec'd");
+      console.log(song);
+      song.embed_uri = $sce.trustAsResourceUrl("https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/" + song.sc_id.toString() + "&amp;color=ff5500&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false");
+      $scope.song = song;
+    })
+    .error(function(data) {
+      console.log("Error: " + data);
+    });
+
+    // $scope.get_sc_link = function(sng) {
+    //   var new_link = $sce.trustAsResourceUrl("https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/" + sng.sc_id.toString() + "&amp;color=ff5500&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false");
+    //   return new_link;
+    // };
+});
+
 kiosk.controller('toolbarController', function($scope, $location, $window, Search) {
   $scope.show_search = false;
   $scope.show_searchBar = false;
   $scope.show_back = true;
   $scope.$on('$locationChangeStart', function(event, next, current) {
     if ($location.path() == "/home") {
-      $scope.show_search = false; // temporary override
+      $scope.show_search = true;
     } else {
       $scope.show_search = false;
     }
