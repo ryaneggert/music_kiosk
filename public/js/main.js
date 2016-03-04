@@ -1,4 +1,4 @@
-var kiosk = angular.module('kiosk', ['ngRoute', 'ngTouch', 'ngMaterial', 'ngMessages', 'ngFx', 'ngAnimate', 'truncate', 'youtube-embed'])
+var kiosk = angular.module('kiosk', ['ngRoute', 'ngTouch', 'ngMaterial', 'ngMessages', 'ngFx', 'ngAnimate', 'truncate', 'ngSanitize', 'youtube-embed'])
   .factory('focus', function($timeout) {
     return function(id) {
       // timeout makes sure that it is invoked after any other event has been triggered.
@@ -298,18 +298,17 @@ kiosk.controller('songController', function($scope, $http, $location, $routePara
     .success(function(song) {
       console.log("Song Rec'd");
       console.log(song);
+      song.embed_uri = $sce.trustAsResourceUrl("https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/" + song.sc_id.toString() + "&amp;color=ff5500&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false");
       $scope.song = song;
     })
     .error(function(data) {
       console.log("Error: " + data);
     });
 
-    $scope.get_sc_link = function(sng) {
-      console.log(sng)
-      var new_link = $sce.trustAsResourceUrl("https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/" + sng.sc_id.toString() + "&amp;color=ff5500&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false");
-      console.log(new_link)
-      return new_link
-    }
+    // $scope.get_sc_link = function(sng) {
+    //   var new_link = $sce.trustAsResourceUrl("https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/" + sng.sc_id.toString() + "&amp;color=ff5500&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false");
+    //   return new_link;
+    // };
 });
 
 kiosk.controller('toolbarController', function($scope, $location, $window, Search) {

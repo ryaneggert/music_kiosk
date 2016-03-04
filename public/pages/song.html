@@ -1,17 +1,21 @@
 <md-content flex layout-padding layout-fill layout="column">
     <md-card>
+        <div class="titlecard">
         <md-card-content layout="column">
             <h1 class="md-headline">{{song.title}}</h1>
             <!--       <md-divider> </md-divider>
       <p>{{video.description}}</p> -->
         </md-card-content>
+        </div>
     </md-card>
     <md-card flex>
         <md-card-content layout-padding layout="column">
-            <iframe width="100%" height="450" scrolling="no" frameborder="no" ng-src="{{get_sc_link(song)}}"></iframe>
+            <iframe width="100%" height="450" scrolling="no" frameborder="no" ng-src="{{song.embed_uri}}"></iframe>
             <br>
             <md-divider></md-divider>
-            <p class="md-body-1">{{song.writeup}}</p>
+            <div class="song_desc">
+                <p class="md-body-1"><pre>{{song.writeup}}</pre></p>
+            </div>
         </md-card-content>
     </md-card>
 </md-content>

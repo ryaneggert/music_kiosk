@@ -100,3 +100,12 @@ button.metafilters {
 h1.md-headline {
   margin: 0;
 }
+
+div.song_desc {
+  height: 40%;
+  overflow-y: auto;
+}
+
+div.titlecard {
+  min-height: 100px;
+}

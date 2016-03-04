@@ -18,7 +18,7 @@
                         </md-tab-label>
                         <md-tab-body>
                             <md-grid-list md-cols="{{itemsPerPage/rowsPerPage}}" md-row-height="16:9" md-gutter="30px">
-                                <md-grid-tile class="md-whiteframe-z2" md-rowspan="1" md-colspan="1" md-colspan-sm="1" ng-repeat="video in filteredvids |offset:currentPage*itemsPerPage|limitTo:itemsPerPage" ng-click="goToContent(video)">>
+                                <md-grid-tile class="md-whiteframe-z2" md-rowspan="1" md-colspan="1" md-colspan-sm="1" ng-repeat="video in filteredvids |offset:currentPage*itemsPerPage|limitTo:itemsPerPage" ng-click="goToContent(video)">
 
                                     <img src="{{video.thumbnail.url}}" height="{{video.thumbnail.height}}" width="{{video.thumbnail.width}}" ng-if="video.type!=='song'">
                                     <img src="img/olin.jpg" height="180" width="320" ng-if="video.type==='song'">
