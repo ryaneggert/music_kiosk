@@ -153,7 +153,7 @@ kiosk.controller('homeController', function($scope, $http, $location, $filter, S
   };
   $scope.applyfilters = function() {
     $scope.filteredvids = $filter('filter')($scope.videos, {
-      name: $scope.searchText,
+      $: $scope.searchText,
       // playlists: ['OCO']
     });
   };
