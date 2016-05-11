@@ -101,21 +101,13 @@ h1.md-headline {
   margin: 0;
 }
 
-div.song_desc {
-  height: 40%;
-  overflow-y: auto;
+div.songdesc {
+  height: auto;
+  overflow-y: scroll;
 }
 
 div.titlecard {
   min-height: 100px;
-}
-
-pre.songdesc {
-  font-size: 14px;
-  font-weight: 400;
-  letter-spacing: .01em;
-  line-height: 20px;
-  font-family: "RobotoDraft,Roboto,'Helvetica Neue',sans-serif";
 }
 
 p.songdesc {
