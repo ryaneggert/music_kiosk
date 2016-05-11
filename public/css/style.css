@@ -109,3 +109,15 @@ div.song_desc {
 div.titlecard {
   min-height: 100px;
 }
+
+pre.songdesc {
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: .01em;
+  line-height: 20px;
+  font-family: "RobotoDraft,Roboto,'Helvetica Neue',sans-serif";
+}
+
+p.songdesc {
+  white-space: pre-line;
+}
