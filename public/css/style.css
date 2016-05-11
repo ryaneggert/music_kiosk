@@ -102,8 +102,8 @@ h1.md-headline {
 }
 
 div.song_desc {
-  height: 40%;
-  overflow-y: auto;
+  height: auto;
+  overflow-y: scroll;
 }
 
 div.titlecard {
